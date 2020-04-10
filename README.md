@@ -14,7 +14,7 @@
 
 
 
-### 1-7 使用python 读取数据
+### 1-7~9 使用python 读取数据
 
 > 不适用程序直接打开，因为过大的文件程序软件无法处理
 
@@ -55,7 +55,7 @@ def parse_file(datafile):
 				break
 			fields = line.split(',')
 			entry = {}
-
+#返回 enumerate(枚举) 对象。
 			for i,value in enumerate(fields):
 				entry[header[i].strip()] = value.strip()
 			data.append(entry)
@@ -80,5 +80,109 @@ def test():
     
 test()
 
+~~~
+
+留意数据中是否存在分隔符的数据单元。
+
+CSV模块 [官网3.8](https://docs.python.org/3.8/library/csv.html)
+
+~~~python
+import os
+import csv
+import pprint
+
+DATADIR = ""
+DATAFILE = "beatles-diskography.csv"
+
+
+def parse_file(datafile):
+	data = []
+	
+	with open(datafile, "r") as f:
+		r = csv.DictReader(f)
+		for line in r:
+			data.append(line)
+			
+
+	return data
+
+if __name__ == '__main__':
+	datafile = os.path.join(DATADIR,DATAFILE)
+	parse_file(datafile)
+	d= parse_file(datafile)
+	pprint.pprint(d)
+~~~
+
+~~~json
+ [{'BPI Certification': '',
+  'Label': 'Capitol(US)[C]',
+  'RIAA Certification': '6xPlatinum',
+  'Released': '6 December 1965',
+  'Title': '',
+  'UK Chart Position': '-',
+  'US Chart Position': '1'},
+ {'BPI Certification': '',
+  'Label': 'Capitol(US)',
+  'RIAA Certification': '2xPlatinum',
+  'Released': '15 June 1966',
+  'Title': 'Yesterday and Today',
+  'UK Chart Position': '-',
+  'US Chart Position': '1'},
+ {'BPI Certification': 'Platinum',
+  'Label': 'Parlophone(UK)',
+  'RIAA Certification': '',
+  'Released': '5 August 1966',
+  'Title': 'Revolver',
+  'UK Chart Position': '1',
+  'US Chart Position': '-'},
+ {'BPI Certification': '',
+  'Label': 'Capitol(US)[C]',
+  'RIAA Certification': '5xPlatinum',
+  'Released': '8 August 1966',
+  'Title': '',
+  'UK Chart Position': '-',
+  'US Chart Position': '1'},
+ {'BPI Certification': '3xPlatinum',
+  'Label': 'Parlophone(UK), Capitol(US)',
+  'RIAA Certification': '11xPlatinum',
+  'Released': '1 June 1967',
+  'Title': "Sgt. Pepper's Lonely Hearts Club Band",
+  'UK Chart Position': '1',
+  'US Chart Position': '1'},
+ {'BPI Certification': 'Platinum',
+  'Label': 'Parlophone(UK), Capitol(US)',
+  'RIAA Certification': '6xPlatinum',
+  'Released': '27 November 1967',
+  'Title': 'Magical Mystery Tour',
+  'UK Chart Position': '31[D]',
+  'US Chart Position': '1'},
+ {'BPI Certification': 'Platinum',
+  'Label': 'Apple(UK), Capitol(US)',
+  'RIAA Certification': '19xPlatinum',
+  'Released': '22 November 1968',
+  'Title': 'The Beatles',
+  'UK Chart Position': '1',
+  'US Chart Position': '1'},
+ {'BPI Certification': 'Silver',
+  'Label': 'Apple(UK), Capitol(US)',
+  'RIAA Certification': 'Platinum',
+  'Released': '13 January 1969',
+  'Title': 'Yellow Submarine',
+  'UK Chart Position': '3',
+  'US Chart Position': '2'},
+ {'BPI Certification': '2xPlatinum',
+  'Label': 'Apple(UK), Capitol(US)',
+  'RIAA Certification': '12xPlatinum',
+  'Released': '26 September 1969',
+  'Title': 'Abbey Road',
+  'UK Chart Position': '1',
+  'US Chart Position': '1'},
+ {'BPI Certification': 'Gold',
+  'Label': 'Apple(UK),United Artists(US)',
+  'RIAA Certification': '4xPlatinum',
+  'Released': '8 May 1970',
+  'Title': 'Let It Be',
+  'UK Chart Position': '1',
+  'US Chart Position': '1'}]
 ~~~
 
