@@ -186,3 +186,62 @@ if __name__ == '__main__':
   'US Chart Position': '1'}]
 ~~~
 
+### 1-10 XLRD excel 文件读取
+
+~~~python
+import xlrd
+~~~
+
+xlrd 可以处理xls和xlsx格式的表格
+
+xlrd的索引index是0开始
+
+还有一个 xlwt 的模块，用于创建excel文件
+
+~~~python
+ def parse_file(datafile):
+        worksheet = xlrd.open_workbook(datafile)
+        sheet = workbook.sheet_by_index(0)
+        
+        data = [[sheet.cell_value(r,col)
+                	for col in range(sheet.ncols)
+                		for r in range(sheet.nrows)]]
+        
+        for row in range(sheet.nrows):
+            for col in range(sheet.ncols):
+                if row == 50:
+                    print(sheet.cell_value(row,col))
+                    
+        sheet.cell_type(3,2) #2 代表是浮点数
+        sheet.cell_value(3,2)
+~~~
+
+#### 安装
+
+~~~python
+pip install xlrd
+~~~
+
+~~~python
+cell_value(行数，列数) #先肉row再列col
+~~~
+
+#### 获取所有数据
+
+~~~python
+workbook = xlrd.open_workbook(datafile)
+sheet = workbook.sheet_by_index(0)
+sheet_data = [[sheet.cell_value(r, col) for col in range(sheet.ncols)] for r in range(sheet.nrows)]
+~~~
+
+#### 一列或一行
+
+~~~python
+#一列
+cv = sheet.col_values(1, start_rowx=1, end_rowx=None)  ##Udacity答案
+cv = sheet.col_values(1, start_rowx=1, end_rowx=(sheet.nrows+1))
+
+#一行
+cv = sheet.row_values(1, start_colx=1, end_colx=(sheet.ncols+1))
+~~~
+
