@@ -245,3 +245,25 @@ cv = sheet.col_values(1, start_rowx=1, end_rowx=(sheet.nrows+1))
 cv = sheet.row_values(1, start_colx=1, end_colx=(sheet.ncols+1))
 ~~~
 
+tips
+
+* 文件结尾注意xls和xlsx
+
+### 1-11_16 JSON
+
+对应python里的字典{}
+
+Json的数据建模的细节：
+
+* 各项数据可能会有不同的字段 - itmes may have different fields
+* 可能会有嵌套对象 - may have nested objects
+* 可能嵌套数组 - may have nested arrays
+
+[Json教程](https://www.w3school.com.cn/json/index.asp)
+
+jason返回unicode的汉字时
+
+~~~python
+print (json.dumps(data, indent=indent, sort_keys=True,ensure_ascii=False)) #,ensure_ascii=False
+~~~
+
