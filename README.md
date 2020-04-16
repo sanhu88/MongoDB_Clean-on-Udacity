@@ -267,3 +267,25 @@ jason返回unicode的汉字时
 print (json.dumps(data, indent=indent, sort_keys=True,ensure_ascii=False)) #,ensure_ascii=False
 ~~~
 
+
+
+## 2 XML
+
+### 2-3 XML的设计原则
+
+XML目的：
+
+* 不依赖平台的数据传输 Data Transfer
+* 方便的读写代码 Easy to read/write code
+* 数据可以验证 Data Validation
+* 方便人工阅读 Human Readable
+* 支持多种应用 Support a wide varirty apps
+
+XML 好处：
+
+* 好处之一，很多程序(比如python)有很强悍(robust)的分析器，可以让开发者专注于自身应用，无需编写特定解析器的数据格式
+* 免费使用，是“免费”软件，不是“自由”软件
+
+XML 设计原则：
+
+* 可以转化成其他格式，而不会有信息丢失
