@@ -253,6 +253,8 @@ tips
 
 对应python里的字典{}
 
+json.loads 用于解码 JSON 数据
+
 Json的数据建模的细节：
 
 * 各项数据可能会有不同的字段 - itmes may have different fields
@@ -265,6 +267,20 @@ jason返回unicode的汉字时
 
 ~~~python
 print (json.dumps(data, indent=indent, sort_keys=True,ensure_ascii=False)) #,ensure_ascii=False
+~~~
+
+~~~
+python 原始类型向 json 类型的转化对照表：
+
+Python				JSON
+dict				object
+list, tuple			array
+str, unicode		string
+int, long, float	number
+True				true
+False				false
+None				null
+#来自https://www.runoob.com/python/python-json.html
 ~~~
 
 
@@ -281,11 +297,39 @@ XML目的：
 * 方便人工阅读 Human Readable
 * 支持多种应用 Support a wide varirty apps
 
-XML 好处：
+XML 拥有一套标准好处：
 
-* 好处之一，很多程序(比如python)有很强悍(robust)的分析器，可以让开发者专注于自身应用，无需编写特定解析器的数据格式
+* 好处之一，很多程序(比如python)有很强悍(robust)的分析器，
+* 可以让开发者专注于自身应用，无需编写特定解析器的数据格式
 * 免费使用，是“免费”软件，不是“自由”软件
 
 XML 设计原则：
 
+* 可以构建数据库来支持特定的查询
 * 可以转化成其他格式，而不会有信息丢失
+* XML更注重于内容，而不是表格或者外观
+
+### 2-4~ XML 实践基础
+
+* 语法 syntax
+
+  1. 由XML 元素构成，标记对
+  2. <tag k ='' value='' /> 创建空元素
+
+* Json几乎可以完美的映射到python的字典
+
+  ~~~
+  使用 JSON 函数需要导入 json 库：import json。
+  
+  json.dumps	将 Python 对象编码成 JSON 字符串
+  json.loads	将已编码的 JSON 字符串解码为 Python 对象
+  ~~~
+
+* 解析XML,接续XML到文件树
+
+  ~~~python
+  import xml.etree.ElementTree as ET
+  import pprint
+  ~~~
+
+  
