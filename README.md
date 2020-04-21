@@ -330,6 +330,27 @@ XML 设计原则：
   ~~~python
   import xml.etree.ElementTree as ET
   import pprint
+  
+tree = ET.parse('example.xml')
+  root = tree.getroot()
+  
+  for child in root:
+      print(child.tag)
   ~~~
-
+  
+  ~~~python
+  #接上
+  title = root.find('./fm/bibl/title')	#Xpatch 语法
+  title_text = ''
+  for p in title:
+      title_text += p.text
+  
+      
+  for a in root.findadd('./fm/bibl/aug/au'):
+      email = a.find('email')
+      if email is not None:
+          print(email.text)
+  
+  ~~~
+  
   
