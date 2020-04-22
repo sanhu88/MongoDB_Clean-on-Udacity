@@ -331,15 +331,17 @@ XML 设计原则：
   import xml.etree.ElementTree as ET
   import pprint
   
+  ~~~
+~~~python
 tree = ET.parse('example.xml')
   root = tree.getroot()
-  
+
   for child in root:
       print(child.tag)
-  ~~~
-  
+~~~
+
   ~~~python
-  #接上
+ #接上
   title = root.find('./fm/bibl/title')	#Xpatch 语法
   title_text = ''
   for p in title:
@@ -352,5 +354,60 @@ tree = ET.parse('example.xml')
           print(email.text)
   
   ~~~
-  
-  
+
+  ### 2-8 XML练习-提取数据
+
+课后答案：
+
+~~~python
+def get_author(root):
+    authors = []
+    for author in root.findall('./fm/bibl/aug/au'):
+        data = {
+                "fnm": None,
+                "snm": None,
+                "email": None
+        }
+        data["fnm"] = author.find('./fnm').text
+        data["snm"] = author.find('./snm').text
+        data["email"] = author.find('./email').text
+
+        authors.append(data)
+
+    return authors
+~~~
+
+自己写的，考虑到None值，但是没有处理
+
+~~~python
+def get_authors(root):
+	authors =[]
+	for author in root.findall('./fm/bibl/aug/au'):
+		data = {
+			'fnm':author.find('fnm').text,
+			'snm':author.find('snm').text,
+			'email':author.find('email').text
+		}
+		authors.append(data)
+	return authors
+~~~
+
+### 2-9 XML练习-处理属性
+
+对于有子属性的标签
+
+~~~xml
+<insr iid="I3"/>
+<insr iid="I4"/>
+~~~
+
+要获取子标签的text，需要使用 .attrib["iid"] 。来获取
+
+~~~python
+insr = author.findall('./insr')
+        for i in insr:
+        	data["insr"].append(i.attrib["iid"])
+~~~
+
+
+
