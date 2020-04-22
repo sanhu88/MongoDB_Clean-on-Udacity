@@ -409,5 +409,135 @@ insr = author.findall('./insr')
         	data["insr"].append(i.attrib["iid"])
 ~~~
 
+### 2-10~ 机场数据获取
 
+数据来源
+
+> https://www.transtats.bts.gov/Data_Elements.aspx?Data=2
+
+步骤分解：
+
+1. 创建用于保存航空公司和机场名称的list
+2. HTTP去下载所有数据
+3. 解析parse 数据文件
+
+### 2-15 提取实体
+
+~~~python
+from bs4 import BeautifulSoup
+import os
+CWDPATH = os.getcwd()
+DATADIR = "resource"
+DATAFILE = "DataElements.html"
+html_file = os.path.join(CWDPATH,(os.path.join(DATADIR, DATAFILE)))
+
+def options(soup,id):
+    option_values =[]
+    carrier_list = soup.find(id =id)
+    for option in carrier_list.find_all('option'):
+    	option_values.append(option['value'])
+    return option_values
+
+def print_list(lable,codes):
+	print(f"\n {lable}")
+	for c in codes:
+		print(c)
+
+def main():
+	#soup = BeautifulSoup(open(article_file))
+	file_text = open(html_file,'r',encoding='utf-8')
+	#soup = BeautifulSoup(file_text,'html.parser')
+	soup = BeautifulSoup(file_text,'lxml') #WORK SAME 
+
+	codes = options(soup,'CarrierList')
+	print_list('Carriers',codes)
+
+	codes = options(soup,'AirportList')
+	print_list('Airports',codes)
+
+main()
+~~~
+
+### 2-16 构建http请求
+
+网页的查询操作以通过按钮提交
+
+~~~html
+<form method="post" action="./Data_Elements.aspx?Data=2" id="form1">
+~~~
+
+* 请求网址
+
+  /Data_Elements.aspx?Data=2 也就是本身
+
+* 请求方式
+
+  post
+
+### 2-17~8 如何传递参数进行查询
+
+在浏览器开发者工具的 Network 工具栏
+
+会看到 Header里 的Form Data 除了已知的参数传入外，还有其他几个比如：
+
+**__EVENTTARGET** / **__EVENTARGUMENT**/ **__VIEWSTATE** / **__VIEWSTATEGENERATOR** / **__EVENTVALIDATION** / **CarrierList** / **AirportList** / **Submit**
+
+### 2-19 构建带参数的请求
+
+
+
+* 一些表单元素被隐藏，没有显示在用户界面
+
+  ~~~html
+  <div class="aspNetHidden">
+  <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="">
+  <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="">
+  <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/……">
+  </div>
+  
+  <div class="aspNetHidden">
+  
+  	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="8E3A4798">
+  	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/……">
+             
+  ~~~
+
+* 查找eventvalidation 和 viewstate
+
+  答案
+
+  ~~~python
+  def extract_data(page):
+      data = {"eventvalidation": "",
+              "viewstate": ""}
+      with open(page, "r") as html:
+          soup = BeautifulSoup(html, "lxml")
+          ev = soup.find(id="__EVENTVALIDATION")
+          data["eventvalidation"] = ev["value"]
+  
+          vs = soup.find(id="__VIEWSTATE")
+          data["viewstate"] = vs["value"]
+  
+      return data
+  ~~~
+
+  我的写法
+
+  ~~~python
+  def extract_data(page):
+      data = {"eventvalidation": "",
+              "viewstate": ""}
+      #with open(page, "r") as html: 
+      #UnicodeDecodeError: 'gbk' codec can't decode byte 0xae in position 3519: illegal multibyte sequence
+      with open(page,'r',encoding='utf-8') as html:
+        #print(type(html))
+        #exit()
+        soup = BeautifulSoup(html,'html.parser')
+        eventvalidation = soup.find(id="__EVENTVALIDATION")["value"]
+        viewstate = soup.find(id="__VIEWSTATEGENERATOR")["value"]
+        data["eventvalidation"] = eventvalidation
+        data["viewstate"] = viewstate
+  ~~~
+
+  
 
