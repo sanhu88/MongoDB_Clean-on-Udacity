@@ -474,7 +474,7 @@ main()
 
   post
 
-### 2-17~8 如何传递参数进行查询
+### 2-17~18 如何传递参数进行查询
 
 在浏览器开发者工具的 Network 工具栏
 
@@ -483,8 +483,6 @@ main()
 **__EVENTTARGET** / **__EVENTARGUMENT**/ **__VIEWSTATE** / **__VIEWSTATEGENERATOR** / **__EVENTVALIDATION** / **CarrierList** / **AirportList** / **Submit**
 
 ### 2-19 构建带参数的请求
-
-
 
 * 一些表单元素被隐藏，没有显示在用户界面
 
@@ -539,5 +537,40 @@ main()
         data["viewstate"] = viewstate
   ~~~
 
+  ### 2-10 请求中断
   
+  如果用get的一些隐藏参数去post查询，一般会被网站拦截
+  
+  ~~~python
+  import os
+  import requests
+  from bs4 import BeautifulSoup
+  
+  r = requests.get("http://www.transtats.bts.gov/Data_Elements.aspx?Data=2")
+  #soup =  BeautifulSoup(r.text,'lxml')	
+  soup =  BeautifulSoup(r.text,'html5lib')	#html5lib 需要安装，速度慢，兼容性好
+  eventvalidation = soup.find(id="__EVENTVALIDATION")["value"]
+  viewstate = soup.find(id="__VIEWSTATE")["value"]
+  viewstategenerator = soup.find(id="__VIEWSTATEGENERATOR")["value"]
+  #print(f'viewstategenerator: {viewstategenerator}')
+  #exit()
+  
+  new = requests.post("http://www.transtats.bts.gov/Data_Elements.aspx?Data=2",
+                      data={'AirportList': "ONT",
+                            'CarrierList': "AA",
+                            'Submit': 'Submit',
+                            "__EVENTTARGET": "",
+                            "__EVENTARGUMENT": "",
+                            "__EVENTVALIDATION": eventvalidation,
+                            "__VIEWSTATEGENERATOR": viewstategenerator,
+                            "__VIEWSTATE": viewstate
+                      })
+  with open('ONT-AA-ariline.html','w') as f:
+  	f.write(new.text)
+  ~~~
+  
+  ### 2-20 抓取一些经验
+  
+  * 查看浏览器如何制作请求(wireshark)
+  * 
 
