@@ -578,3 +578,12 @@ with open('ONT-AA-ariline.html','w') as f:
 * 换种方法查看http请求
 * 继续迭代循环操作模拟请求
 
+### 2-22 抓取解法
+
+* 使用会话
+
+  ~~~python
+  s = requests.Session()
+  ~~~
+
+  
