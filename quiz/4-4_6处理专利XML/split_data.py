@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+'''
 # So, the problem is that the gigantic file is actually not a valid XML, because
 # it has several root elements, and XML declarations.
 # It is, a matter of fact, a collection of a lot of concatenated XML documents.
 # So, one solution would be to split the file into separate documents,
 # so that you can process the resulting files as valid XML documents.
+# 问题是庞大的文件实际上不是有效的 XML，因为它有几个根元素和 XML 声明。
+# 实际上是多个相连的 XML 文档构成的。一种解决方法是将文件拆分为多个文档，
+# 并将这些文档处理为有效的 XML 文档。
+'''
 
 import xml.etree.ElementTree as ET
 import pprint
