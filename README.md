@@ -586,4 +586,101 @@ with open('ONT-AA-ariline.html','w') as f:
   s = requests.Session()
   ~~~
 
-  
+
+
+
+## 3 数据清洗
+
+### 3-1~3 什么是数据清洗
+
+是一个不断迭代处理的过程 iterative ，处理数据中的outlier 或者不同地域的约定，比如US的日期格式是 08/24/2019 但是UK的是24/08/2019
+
+### 3-4 脏数据的来源
+
+* 只要人参与就存在脏数据的可能
+* 用户输入错误 use entry errors
+* 编码标准较低，或者没有被严格执行
+* 不同的数据结构表 schema
+* 遗留系统 legacy
+* 系统的进化扩容和升级 evolve
+* 不唯一的标识符 Identifiers
+* 数据转换中产生的错误
+* 程序或者程序员错误
+* 数据在传输和储存发生的物理错误
+
+### 3-5~6 数据质量
+
+五大度量标准：
+
+* 有效性 validity ，数据是否符合数据模式或者其他约束条件，比如年龄不能为负数
+* 精度，准确性 accuracy ，比如数据集中的地址是否都真实存在？需要一些黄金标准
+* 完整性 completeness 是否包含所有记录？
+* 数据内部的一致性 consistency ，是否匹配其他记录
+* 统一性 uniformity ，比如数据单位是否一致
+
+###   3-7 数据清理蓝图
+
+1. 审核数据 audit
+   * 编写验证规则步骤检查数据
+   * 创建数据质量报告
+   * 运行统计分析，检查异常值
+2. 制定数据清理计划
+   * 确定脏数据产生的各项原因
+   * 定义一组操作来纠正修复数据
+   * 进行测试
+3. 执行数据清理计划
+   * 运行操作集来整理数据
+4. 人工纠正
+5. 循环迭代 1-4步
+
+### 3-8 蓝图清洗数据实例
+
+芝加哥街道类型名称统计
+
+留意结果中有些时候纯数字部分，不是接待类型
+
+资料[下载地址](http://cn-static.udacity.com/DAND_file/chicago_illinois.osm.bz2)，解压后很大1.7G
+
+代码部分
+
+~~~python
+#!/usr/bin/env python
+          # -*- coding: utf-8 -*-
+          import xml.etree.cElementTree as ET
+          from collections import defaultdict
+          import re
+
+          osm_file = open("chicago.osm", "r")
+
+          street_type_re = re.compile(r'\S+\.?$', re.IGNORECASE)
+          street_types = defaultdict(int)
+
+          def audit_street_type(street_types, street_name):
+              m = street_type_re.search(street_name)
+              if m:
+                  street_type = m.group()
+
+                  street_types[street_type] += 1
+
+          def print_sorted_dict(d):
+              keys = d.keys()
+              keys = sorted(keys, key=lambda s: s.lower())
+              for k in keys:
+                  v = d[k]
+                  print "%s: %d" % (k, v) 
+
+          def is_street_name(elem):
+              return (elem.tag == "tag") and (elem.attrib['k'] == "addr:street")
+
+          def audit():
+              for event, elem in ET.iterparse(osm_file):
+                  if is_street_name(elem):
+                      audit_street_type(street_types, elem.attrib['v'])    
+              print_sorted_dict(street_types)    
+
+          if __name__ == '__main__':
+              audit()
+~~~
+
+
+
