@@ -648,7 +648,7 @@ with open('ONT-AA-ariline.html','w') as f:
           # -*- coding: utf-8 -*-
           import xml.etree.cElementTree as ET
           from collections import defaultdict
-          import re
+          import re	#regular expression
 
           osm_file = open("chicago.osm", "r")
 
@@ -681,6 +681,22 @@ with open('ONT-AA-ariline.html','w') as f:
           if __name__ == '__main__':
               audit()
 ~~~
+
+### 3-9~12 validity 审查有效性
+
+* 关注单独字段的值：必填项，唯一值
+* 交叉字段约束（外键），开始日期必须在结束日期前，数据类型的指定
+  * 特殊的正则表达式约束 ，邮编，邮箱地址
+
+审核有效性是，确定对个别字段的施加约束，并检查字段符合这些约束条件。
+
+https://wiki.dbpedia.org/ 城市数据下载为csv文件，邮编项会有不同的书写格式；时区项，分夏令时和非夏令时，也可能包含HTML代码。
+
+交叉约束，以人口密度为例，进行数学计算有效性检查。
+
+习题中，图书馆中的图书实例，应该借出人信息和库存数进行交叉有效性约束。
+
+
 
 
 
