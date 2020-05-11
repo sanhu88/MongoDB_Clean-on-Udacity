@@ -2,6 +2,8 @@
 
 -----
 
+> 课程详情 [link](https://www.udacity.com/wiki/ud032#datasets-used-in-this-course)
+
 ## 1 数据提取基础
 
 ### 1-3~4 评估数据指向
@@ -696,7 +698,46 @@ https://wiki.dbpedia.org/ 城市数据下载为csv文件，邮编项会有不同
 
 习题中，图书馆中的图书实例，应该借出人信息和库存数进行交叉有效性约束。
 
+### 3-13~14 accuracy 审查准确率
+
+准确率的难度很高，需要黄金标准。
+
+以城市所属国家为例，选用ISO-3316 两位大写字母代替国家。
 
 
 
+以下为代码片段：
+
+~~~python
+client = MongoCliebt('mongodb://localhost:27017')
+db = client.examples
+
+def skip_lines(input_file, skip):
+    for i in range(0, skip):
+        next(input_file)
+        
+def audit_country(input_file):
+    for row in input_file:
+        country = row['country_label']
+        country = country.strip()
+        if (country == 'null') or (country == ''):
+            countinue
+        if db.countries.find({'name' : country}).count() != 1:
+            print(f'Not found: {country}')
+            
+if __name__ = '__main__':
+    input_file = csv.DictReader(open('cities.csv'))
+    skip_line(input_file,2)
+    audit_country(input_file)
+    
+~~~
+
+
+
+代码match ISO 代码后，一些国家的字段值不在ISO内的原因：
+
+1. 使用数组，一个城市对应多个地区（重名现象）
+2. 列的漂移
+3. 用正则表达式来修复，比如下划线连接了单词
+4. 语言或者政治原因（对应办法是，只使用确定的有效的国家）
 
