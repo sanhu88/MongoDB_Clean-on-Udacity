@@ -758,3 +758,38 @@ if __name__ = '__main__':
 解决一致性问题的关键是确定哪个数据源最肯能是正确的。并可能通过从我们最信任的记录复制出数据。
 
 案例使用不同时期，美国公司使用不同股票符号唯一码的问题，代码可以分配给不同的公司，但是需要明确的记录更改时间，以及对应的更改公司。测试问题是，欧洲一个国家加入欧元区的前后，交易记录的汇率名称一致性审查。
+
+### 3-18 uniformity 统一性（均匀性）审查
+
+使用相同单位的所有值
+
+一下代码测试城市的纬度，默认是浮点数坐标
+
+~~~python
+minval = -90
+maxval = 90
+
+def audit_float_field(v, counts):
+    v = v.strip()
+    if v == 'NULL':
+        counts['nulls'] += 1
+    elif v == '':
+        counts['empties'] += 1
+    elif is_array(v):
+        counts['arrary'] += 1
+    elif not is_number(v):
+        print(f'Found non number:{v}')
+    else:
+        v = float(v):
+            if not ((minval < v) and (v < maxval)):
+                print(f'Found put of range value : {v}')
+                
+~~~
+
+但是可能数据集中包含 度分秒的坐标方式：
+
+~~~
+34 25 00 N
+~~~
+
+使用了不同的单位，如果直接导入，会产生dirty data
