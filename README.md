@@ -802,3 +802,16 @@ def audit_float_field(v, counts):
 * harmonizing 调整数据，比如把街道、路缩写扩充成全程，当然也可以选择全部用简称
 * 改变数据集的编码方式，国家双字母换成三字母表示
 
+### 练习
+
+Keeping the value with most significant digits makes the most sense, since it most likely comes from the most reliable source.
+
+保留最有效数字的值最有意义，因为它最有可能来自比较可靠的来源。
+
+#### 4
+
+explore thedata and mark the fields that you think also should be processed in a similar way as 'areaLand'(changed from an array to a single value):
+
+* populationTotal and areaMetro
+* Name can not really be checked for correctness like that! Some places can even officially have names in different languages!
+* "postalCode" can not be processed like that. Look at the contents of the field (just print out all the values for the field)! There are so many variations that so simplified approach of cleaning would not work well on this field.
