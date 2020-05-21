@@ -815,3 +815,44 @@ explore thedata and mark the fields that you think also should be processed in a
 * populationTotal and areaMetro
 * Name can not really be checked for correctness like that! Some places can even officially have names in different languages!
 * "postalCode" can not be processed like that. Look at the contents of the field (just print out all the values for the field)! There are so many variations that so simplified approach of cleaning would not work well on this field.
+
+#### Python日期计算
+
+~~~python
+import datetime
+def which_date(start_date,time):
+    """
+    This function takes as input a string depicting a date in YYYY/mm/dd
+    format and a string stating a time period in the form of "X day(s)" or
+    "Y week(s)". Output should be a string in form YYYY/mm/dd with the date
+    that is X days or Y weeks after the initial date.
+    """
+    end_date = ''
+    n = int(time.split(' ')[0])
+    time_range = time.split(' ')[1]
+    start_date_time = datetime.datetime.strptime(start_date,"%Y/%m/%d")
+    if time.count('day'):
+        end_date = start_date_time + datetime.timedelta(days=n)
+    if time.count('week'):
+        end_date = start_date_time + datetime.timedelta(weeks=n)
+    
+    # Replace this with your code!
+    end_date = end_date.strftime("%Y-%m-%d")
+    return end_date
+    print(end_date)
+
+    
+
+
+if __name__ == "__main__":
+    
+    print(which_date('2016/02/10','35 days'))
+    print(which_date('2015/01/17','1 week'))
+~~~
+
+
+
+#### SQL 和 MongoDB
+
+* [SQL vs. NoSQL: 有何区别？](http://www.sitepoint.com/sql-vs-nosql-differences) 正片文章写得简单详实，值得翻译
+

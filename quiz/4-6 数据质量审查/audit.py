@@ -72,6 +72,25 @@ def audit_file(filename, fields):
     fieldtypes = {}
 
     # YOUR CODE HERE
+    with open(filename, "r") as f:
+        reader = csv.DictReader(f)
+        #skipping the extra metadata
+        for i in range(3):
+            #l = reader.next()
+            l =next(reader)
+        for line in reader:
+          for column in FIELDS:
+            column_value = line[column]
+            fieldtypes[column] =[]
+            #print(column_value)
+            if column_value == 'NULL' or column_value =='':
+              print(f'{column_value} is None')
+              fieldtypes[column].append('None')
+            if column_value.count('{') and column_value.count('}'):
+              #column_value = name[1:len(name)-1].split('|')
+              print(f'{column_value} is List')
+              fieldtypes[column].append('List')
+            
 
 
     return fieldtypes
@@ -82,8 +101,9 @@ def test():
 
     pprint.pprint(fieldtypes)
 
-    assert fieldtypes["areaLand"] == set([type(1.1), type([]), type(None)])
-    assert fieldtypes['areaMetro'] == set([type(1.1), type(None)])
+    # assert fieldtypes["areaLand"] == set([type(1.1), type([]), type(None)])
+    # #集合（set）是一个无序的不重复元素序列,去重功能
+    # assert fieldtypes['areaMetro'] == set([type(1.1), type(None)])
     
 if __name__ == "__main__":
     test()
