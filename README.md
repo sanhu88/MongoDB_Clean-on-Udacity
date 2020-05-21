@@ -856,3 +856,17 @@ if __name__ == "__main__":
 
 * [SQL vs. NoSQL: 有何区别？](http://www.sitepoint.com/sql-vs-nosql-differences) 正片文章写得简单详实，值得翻译
 
+
+
+## 4 MongoDB
+
+### 4.1 介绍
+
+* 对于数据分析程序有重要意义
+* No-SQL 数据库，通常叫做文档数据库 document database
+  * 不是PPT/PDF/DOC的文档存储
+  * 文档，是指关联数组 associative array，如JSON 对象，php的数组，python的字典，ruby的散列表
+* 允许存储层次数据结构，为独立的项目或文件
+
+
+
