@@ -884,5 +884,23 @@ if __name__ == "__main__":
 }
 ~~~
 
+### 4-3 为何使用MongoDB
+
+1. 灵活的模式 flexible schema，更容易处理扁平格式数据
+2. 面向程序员 oriented toward programmers，熟悉的数据格式；支持流行语言的驱动程序
+3. 灵活的部署方式 flexible deployment
+4. 设计面向大数据 designed for big data
+5. 聚合框架 aggregation framework 利于高效分析数据
+
+官网下载 https://www.mongodb.com/download-center/community
+
+安装python数据驱动
+
+~~~python
+python -m pip install pymongo
+~~~
+
+
+
 
 
