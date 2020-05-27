@@ -860,13 +860,29 @@ if __name__ == "__main__":
 
 ## 4 MongoDB
 
-### 4.1 介绍
+### 4-1 介绍
 
 * 对于数据分析程序有重要意义
 * No-SQL 数据库，通常叫做文档数据库 document database
   * 不是PPT/PDF/DOC的文档存储
   * 文档，是指关联数组 associative array，如JSON 对象，php的数组，python的字典，ruby的散列表
 * 允许存储层次数据结构，为独立的项目或文件
+
+### 4-2 数据建模
+
+将数据转化成JSON格式的嵌套样式，比如特斯拉的车型包含设计师（first name ，last name），多个安装工厂等。
+
+~~~json
+{
+    "manufacturer" : "Tesla Motors",
+    "class" : "full-size",
+    "designer" : {
+        "firstname" : "Franz",
+        "surname" : "von Holzhausen"
+    }
+    "production" : "[2012,2013]"
+}
+~~~
 
 
 
