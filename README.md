@@ -948,5 +948,12 @@ if __name__ == "__main__":
 {u'_id': ObjectId('5ece6eaed40ce162f32dc6a5'), u'name': u'Chicago'}
 ~~~
 
+### 4-4 特性一 Flexible Schema 灵活的模式
 
+1. 数据输入项缺少，或者缺少字段
+2. 数据存在多层迭代 literations
+
+以名人信息为例，有人不止一个配偶或者孩子，有些人没有孩子
+
+以城市信息为例，增加了时区字段
 
