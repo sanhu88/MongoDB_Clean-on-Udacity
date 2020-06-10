@@ -870,7 +870,7 @@ if __name__ == "__main__":
 
 ### 4-2 数据建模
 
-将数据转化成JSON格式的嵌套样式，比如特斯拉的车型包含设计师（first name ，last name），多个安装工厂等。
+将数据转化成JSON格式的嵌套样式，比如特斯拉的车型包含设计师（first name ，last name，也可以直接是一行字符串），多个安装工厂等。
 
 ~~~json
 {
@@ -884,12 +884,14 @@ if __name__ == "__main__":
 }
 ~~~
 
+> MongoDB documents can contain lists and nested dictionaries like JSON objects and Python dictionaries.
+
 ### 4-3 为何使用MongoDB
 
 1. 灵活的模式 flexible schema，更容易处理扁平格式数据
 2. 面向程序员 oriented toward programmers，熟悉的数据格式；支持流行语言的驱动程序
 3. 灵活的部署方式 flexible deployment
-4. 设计面向大数据 designed for big data
+4. 设计面向大数据 designed for big data,良好的扩展性
 5. 聚合框架 aggregation framework 利于高效分析数据
 
 官网下载 https://www.mongodb.com/download-center/community
@@ -946,9 +948,11 @@ if __name__ == "__main__":
 
 ~~~python
 {u'_id': ObjectId('5ece6eaed40ce162f32dc6a5'), u'name': u'Chicago'}
+
+{'_id': ObjectId('5ee0e4ca2102c2d949f17070'), 'name': 'Beijing'}
 ~~~
 
-### 4-4 特性一 Flexible Schema 灵活的模式
+### 4-4 特性一  Flexible Schema 灵活的模式
 
 1. 数据输入项缺少，或者缺少字段
 2. 数据存在多层迭代 literations
@@ -956,4 +960,73 @@ if __name__ == "__main__":
 以名人信息为例，有人不止一个配偶或者孩子，有些人没有孩子
 
 以城市信息为例，增加了时区字段
+
+MongoDB 用灵活的模式，来适应这种变化
+
+> All of these are valid models for the infobox data! But it's also important to keep in mind that when you are designing your data collections, that you choose a schema that makes it easy to work with.
+
+### 4-5 PyMongo
+
+~~~
+\mongodb-win32-x86_64-2012plus-4.2.7\bin> .\mongod.exe --dbpath D:\MongoDB_data
+~~~
+
+用于连接数据库和操作数据
+
+程序构架
+
+<img src="README.assets/image-20200528223153204.png" alt="image-20200528223153204" style="zoom:50%;" />
+
+BSON = bit encoding json
+
+~~~
+db.cities.find().pretty()
+~~~
+
+~~~python
+from pymongo import MongoClient
+import pprint
+
+client = MongoClient('mongodb://localhost:27017/')
+
+tesla_s = {
+    "manufacturer" : "Tesla Motors",
+    "class" : "full-size",
+    "body style" : "5-door liftback",
+    "production" : [2012,2013],
+    "model years" : [2013],
+    "layour" : ["Rear-motor","rear-wheel drive"],
+    "designer" : {
+        "firstname" : "Franz",
+        "surname" : "von Holehausen"
+    }
+}
+
+db = client.examples	#database
+db.autos.insert(tesla_s)
+
+for a in db.autos.find():
+    pprint.pprint(a)
+~~~
+
+### 4-6 使用字段在MongoDB中查询
+
+~~~python
+from pymongo improt MongoClient
+import pprint
+
+clinet = MongoClinet("mongodb://localhost:27017")
+
+db = cliengt.examples
+
+def find():
+    autos = db.autos.find({"class" : "full-size"} )
+    for a in autos:
+        pprint.pprint(a)
+        
+if __name__ == '__main__':
+    find()
+~~~
+
+
 
