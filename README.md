@@ -1084,5 +1084,21 @@ def find():
         pprint.pprint(a)
 ~~~
 
+### 4-8 投影查询
+
+也就是设置显示结果的字段
+
+~~~python
+...
+def find():
+    query = {"class" : "full-size","manufacturer" : "Tesla Motors"}
+    projecttion = {"_id":0,"production":1}
+    autos = db.autos.find(query,projecttion)
+    for a in autos:
+        pprint.pprint(a)
+~~~
+
+_id 如果不赋值0 ，默认自带
+
 
 

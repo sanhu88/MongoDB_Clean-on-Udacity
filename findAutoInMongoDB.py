@@ -6,7 +6,9 @@ clinet = MongoClient("mongodb://localhost:27017")
 db = clinet.examples
 
 def find():
-    autos = db.autos.find({"class" : "full-size"})
+    query = {"class" : "full-size","manufacturer" : "Tesla Motors"}
+    projecttion = {"_id":0,"production":1,"manufacturer":1}
+    autos = db.autos.find(query,projecttion)
     for a in autos:
         pprint.pprint(a)
         
