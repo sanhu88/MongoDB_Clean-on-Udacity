@@ -1074,5 +1074,15 @@ if __name__ == "__main__":
         pprint.pprint(car)
 ~~~
 
+### 4-7 多字段查询
+
+~~~python
+...
+def find():
+    autos = db.autos.find({"class" : "full-size","manufacturer" : "Tesla Motors"} )
+    for a in autos:
+        pprint.pprint(a)
+~~~
+
 
 
