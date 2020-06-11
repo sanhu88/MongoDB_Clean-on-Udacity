@@ -1127,5 +1127,15 @@ for a in autos:
 
 
 
+### 4-10 mongoimport
+
+CMD下操作 直接导入json文件到MongoDB
+
+[官方手册](https://docs.mongodb.com/manual/reference/program/mongoimport/#examples)
+
+~~~bash
+mongoimport -d examples -c myautos2 --file autos.json
+~~~
+
 
 
