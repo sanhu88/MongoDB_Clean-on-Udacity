@@ -7,7 +7,7 @@ db = clinet.examples
 
 def find():
     query = {"class" : "full-size","manufacturer" : "Tesla Motors"}
-    projecttion = {"_id":0,"production":1,"manufacturer":1}
+    projecttion = {"_id":0}
     autos = db.autos.find(query,projecttion)
     for a in autos:
         pprint.pprint(a)

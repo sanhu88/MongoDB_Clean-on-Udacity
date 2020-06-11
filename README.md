@@ -1098,7 +1098,34 @@ def find():
         pprint.pprint(a)
 ~~~
 
-_id 如果不赋值0 ，默认自带
+_id 如果不赋值0 ，默认自带。
+
+### 4-9 插入数据 insert
+
+~~~python
+...
+for a in autos:
+    db.myautos.insert_one(a)
+...
+~~~
+
+3.9 https://api.mongodb.com/python/current/tutorial.html#bulk-inserts
+
+~~~python
+>>> new_posts = [{"author": "Mike",
+...               "text": "Another post!",
+...               "tags": ["bulk", "insert"],
+...               "date": datetime.datetime(2009, 11, 12, 11, 14)},
+...              {"author": "Eliot",
+...               "title": "MongoDB is fun",
+...               "text": "and pretty easy too!",
+...               "date": datetime.datetime(2009, 11, 10, 10, 45)}]
+>>> result = posts.insert_many(new_posts)
+>>> result.inserted_ids
+[ObjectId('...'), ObjectId('...')]
+~~~
+
+
 
 
 
