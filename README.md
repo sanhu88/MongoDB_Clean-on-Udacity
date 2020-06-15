@@ -1139,3 +1139,37 @@ mongoimport -d examples -c myautos2 --file autos.json
 
 
 
+### 4-11 运算符 operators 和范围查询 range queries
+
+运算符用于条件筛选，比如大于小于等
+
+~~~mysql
+$gt 大于
+$lt 小于
+$gte
+$lte
+$ne 不等于
+~~~
+
+多个条件
+
+~~~python
+query = {"model years" : {"$gte" : 2012 , "$lte" : 2016}}
+autos = db.autos.find(query)
+~~~
+
+字符串也可以筛选，X开头的城市
+
+~~~python
+query = {"name" : {"$gte" : "X" , "$lt" : "Y"}}
+cities = db.cities.find(query)
+~~~
+
+按日期筛选
+
+~~~python
+query = {"foundingDate" : {"$gt" : datetime(1837,1,15) , "lte" : datetime(1840,2,15)}}
+~~~
+
+请记住，2000 年不属于 21 世纪！
+

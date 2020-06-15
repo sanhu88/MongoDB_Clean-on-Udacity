@@ -1,9 +1,9 @@
 from pymongo import MongoClient
 import pprint
 
-clinet = MongoClient("mongodb://localhost:27017")
+client = MongoClient("mongodb://localhost:27017")
 
-db = clinet.examples
+db = client.examples
 
 def find():
     query = {"class" : "full-size","manufacturer" : "Tesla Motors"}
