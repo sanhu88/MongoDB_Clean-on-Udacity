@@ -1171,5 +1171,30 @@ cities = db.cities.find(query)
 query = {"foundingDate" : {"$gt" : datetime(1837,1,15) , "lte" : datetime(1840,2,15)}}
 ~~~
 
-请记住，2000 年不属于 21 世纪！
+测试题，请记住，2000 年不属于 21 世纪！
+
+### 4-12 exists 字段
+
+类似于Having ，搜索存在这个字段的记录
+
+~~~mongodb
+> show databases
+admin     0.000GB
+config    0.000GB
+examples  0.000GB
+local     0.000GB
+> use examples
+switched to db examples
+> db.cities.find()
+{ "_id" : ObjectId("5ee0e4ca2102c2d949f17070"), "name" : "Beijing" }
+{ "_id" : ObjectId("5ee0e54c3798cbe215ef7cfe"), "name" : "Shanghai" }
+{ "_id" : ObjectId("5ee0e822a12b7a5f0dca37bb"), "name" : "Shanghai" }
+> db.cities.find({"name" : {"$exists" : 1}}).count()
+~~~
+
+美化输出
+
+~~~
+> db.cities.find({"name" : {"$exists" : 1}}).pretty()
+~~~
 
