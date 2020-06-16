@@ -1198,3 +1198,27 @@ switched to db examples
 > db.cities.find({"name" : {"$exists" : 1}}).pretty()
 ~~~
 
+### 4-13 正则运算符 regex
+
+~~~
+> db.cities.find({"name" : {"$regex" : "ha"}}).pretty()
+~~~
+
+首字母大小写不敏感
+
+~~~
+db.cities.find({"name" : {"$regex" : "[sS]ha"}}).pretty()
+~~~
+
+包含两个其中一个单词
+
+~~~
+db.cities.find({"name" : {"$regex" : "[sS]ha|^[Bb]"}}).pretty()
+~~~
+
+也可以结合投影查询来筛选显示结果
+
+官方资料：
+
+* MongoDB的[regex部分](https://docs.mongodb.com/manual/reference/operator/query/regex/)
+* Python 3.8 的[https://docs.python.org/3.8/howto/regex.html](https://docs.python.org/3.8/howto/regex.html)
