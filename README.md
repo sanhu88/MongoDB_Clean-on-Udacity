@@ -1316,3 +1316,23 @@ db.autos.update({"designer.firstname":{"$regex" : "Fra"}},{$set:{"updateDate" : 
 WriteResult({ "nMatched" : 2, "nUpserted" : 0, "nModified" : 2 })
 ~~~
 
+### 4-21 删除文档 remove dorp
+
+dorp() 是直接删掉整个collection，包括索引等
+
+remove() 可以添加条件
+
+~~~
+> db.autos.find({"title" : {"$exists" : 0}}).count()
+3
+> db.autos.find({"title" : {"$exists" : 1}}).count()
+1
+~~~
+
+
+
+~~~
+db.autos.remove({"title" : {"$exists" : 1}})
+WriteResult({ "nRemoved" : 1 })
+~~~
+
