@@ -1226,3 +1226,10 @@ db.cities.find({"name" : {"$regex" : "[sS]ha|^[Bb]"}}).pretty()
 ### 4-14 使用标量查询数组
 
 默认查询，MongoDB会遍历数组字段内的内容，只要有符合项，就会作为显示结果。
+
+### 4-15 $in 运算符
+
+~~~
+db.autos.find({"model years" : {"$in" : [2013,2014]}}).pretty()
+~~~
+
