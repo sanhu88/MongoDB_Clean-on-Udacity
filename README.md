@@ -1282,17 +1282,37 @@ $set
 WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
 ~~~
 
-$unset
+
+
+$unset 逆向删除
 
 ~~~
 db.autos.update({"designer.firstname":{"$regex": "Fra"}},{"$unset" : {"shipDate" : ""}})
 WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
 ~~~
 
+> 留意update部分更新时要加set运算符
+
 不要用以下
 
 ~~~
 db.autos.update({"designer.firstname":{"$regex": "Fra"}},{"shipDate" : "2020-06-19"})
 WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+~~~
+
+会让对应的记录更新成
+
+~~~
+{ "_id" : ObjectId("5ee0e880a0b58fad5b46ea7c"), "shipDate" : "2020-06-19" }    ikes: 100 })
+~~~
+
+### 4-20 多项更新 multi
+
+multi 更新所有匹配记录
+
+~~~
+db.autos.update({"designer.firstname":{"$regex" : "Fra"}},{$set:{"updateDate" : "2020-06-19"}},{multi : true})
+> db.autos.update({"designer.firstname":{"$regex" : "Fra"}},{$set:{"updateDate" : "2020-06-19"}},{multi : true})
+WriteResult({ "nMatched" : 2, "nUpserted" : 0, "nModified" : 2 })
 ~~~
 
