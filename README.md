@@ -1233,3 +1233,10 @@ db.cities.find({"name" : {"$regex" : "[sS]ha|^[Bb]"}}).pretty()
 db.autos.find({"model years" : {"$in" : [2013,2014]}}).pretty()
 ~~~
 
+### 4-46 $all 运算符
+
+~~~
+db.autos.find({"model years" : {"$all" : [2013,2014]}}).pretty()
+~~~
+
+$all 表示对应的字段，至少包含所有筛选的条件
