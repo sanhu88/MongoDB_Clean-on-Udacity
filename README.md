@@ -1241,7 +1241,7 @@ db.autos.find({"model years" : {"$all" : [2013,2014]}}).pretty()
 
 $all 表示对应的字段，至少包含所有筛选的条件
 
-### 4-15 点表示嵌套
+### 4-17 点表示嵌套
 
 ~~~
 db.autos.find({"designer.firstname":{"$regex": "Fra"}}).pretty()
@@ -1252,3 +1252,17 @@ db.autos.find({"dimesions.weight" : {"$gt" : 5000}})
 query = {"dimensions.width" : {"$gt" : 2.5}}
 ~~~
 
+### 4-18 更新记录 update
+
+* save 如果有对应的结果就会更新，如果没有对应的_id就会创建一个新的
+* findOne 返回匹配结果的第一个
+* **findOne()方法不支持pretty()方法**
+
+~~~
+> auto["updateDate"] = "2020-06-18"
+2020-06-18
+> db.autos.save(auto)
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+~~~
+
+猜测版本问题，脚本没有update
