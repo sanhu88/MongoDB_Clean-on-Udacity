@@ -1252,7 +1252,7 @@ db.autos.find({"dimesions.weight" : {"$gt" : 5000}})
 query = {"dimensions.width" : {"$gt" : 2.5}}
 ~~~
 
-### 4-18 更新记录 update
+### 4-18 更新记录 save
 
 * save 如果有对应的结果就会更新，如果没有对应的_id就会创建一个新的
 * findOne 返回匹配结果的第一个
@@ -1265,4 +1265,34 @@ query = {"dimensions.width" : {"$gt" : 2.5}}
 WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
 ~~~
 
-猜测版本问题，脚本没有update
+猜测版本问题，脚本save没有更新
+
+### 4-19 设置与复位 update
+
+~~~
+auto = db.autos.update({"designer.firstname":{"$regex": "Fra"}},{"$set" : {"shipDate" : "2020-06-19"}})
+~~~
+
+
+
+$set
+
+~~~
+ db.autos.update({"designer.firstname":{"$regex": "Fra"}},{"$set" : {"shipDate" : "2020-06-19"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+~~~
+
+$unset
+
+~~~
+db.autos.update({"designer.firstname":{"$regex": "Fra"}},{"$unset" : {"shipDate" : ""}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+~~~
+
+不要用以下
+
+~~~
+db.autos.update({"designer.firstname":{"$regex": "Fra"}},{"shipDate" : "2020-06-19"})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+~~~
+
