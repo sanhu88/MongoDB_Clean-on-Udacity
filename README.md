@@ -1265,7 +1265,19 @@ query = {"dimensions.width" : {"$gt" : 2.5}}
 WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
 ~~~
 
-猜测版本问题，脚本save没有更新
+~~~python
+ DeprecationWarning: update is deprecated. Use replace_one, update_one or update_many instead.
+~~~
+
+~~~
+update_many() got an unexpected keyword argument 'multi'
+~~~
+
+
+
+~~猜测版本问题，脚本save没有更新~~
+
+> 缩进问题，造成main在函数内部
 
 ### 4-19 设置与复位 update
 
@@ -1334,5 +1346,320 @@ remove() 可以添加条件
 ~~~
 db.autos.remove({"title" : {"$exists" : 1}})
 WriteResult({ "nRemoved" : 1 })
+~~~
+
+### 4-22 菜鸟pymongo
+
+#### 查看数据库名称
+
+~~~python
+>>> dblist = myclient.list_database_names()
+>>> dblist
+['admin', 'config', 'examples', 'local']
+~~~
+
+#### 插入
+
+~~~python
+import pymongo
+ 
+myclient = pymongo.MongoClient('mongodb://localhost:27017/')
+mydb = myclient['runoobdb']
+mycol = mydb["sites"]
+ 
+mydict = { "name": "Google", "alexa": "1", "url": "https://www.google.com" }
+ 
+x = mycol.insert_one(mydict)
+print(x.inserted_id)
+~~~
+
+print(x.inserted_id) 获取ID
+
+##### 多条
+
+~~~python
+...
+mylist = [
+  { "name": "Taobao", "alexa": "100", "url": "https://www.taobao.com" },
+  { "name": "QQ", "alexa": "101", "url": "https://www.qq.com" },
+  { "name": "Facebook", "alexa": "10", "url": "https://www.facebook.com" },
+  { "name": "知乎", "alexa": "103", "url": "https://www.zhihu.com" },
+  { "name": "Github", "alexa": "109", "url": "https://www.github.com" }
+]
+z = mycol.insert_many(mylist)
+print(z.inserted_ids)
+~~~
+
+
+
+~~~python
+[ObjectId('5ef01f53668cecb733b6694b'), ObjectId('5ef01f53668cecb733b6694c'), ObjectId('5ef01f53668cecb733b6694d'), ObjectId('5ef01f53668cecb733b6694e'), ObjectId('5ef01f53668cecb733b6694f')]
+~~~
+
+##### 也可以插入时指定ID
+
+~~~python
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoobdb"]
+mycol = mydb["site2"]
+ 
+mylist = [
+  { "_id": 1, "name": "RUNOOB", "cn_name": "菜鸟教程"},
+  { "_id": 2, "name": "Google", "address": "Google 搜索"},
+  { "_id": 3, "name": "Facebook", "address": "脸书"},
+  { "_id": 4, "name": "Taobao", "address": "淘宝"},
+  { "_id": 5, "name": "Zhihu", "address": "知乎"}
+]
+ 
+x = mycol.insert_many(mylist)
+ 
+# 输出插入的所有文档对应的 _id 值
+print(x.inserted_ids)
+~~~
+
+~~~
+[1, 2, 3, 4, 5]
+~~~
+
+#### 查询
+
+find 和 find_one 方法来查询集合中的数据，它类似于 SQL 中的 SELECT 语句
+
+~~~python
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoob"]
+mycol = mydb["sites"]
+ 
+for x in mycol.find():
+  print(x)
+~~~
+
+##### 投影查询
+
+~~~python
+for x in mycol.find({},{ "_id": 0, "name": 1, "alexa": 1 }):
+  print(x)
+~~~
+
+> 除了 _id 你不能在一个对象中同时指定 0 和 1，如果你设置了一个字段为 0，则其他都为 1，反之亦然。
+>
+> Projection cannot have a mix of inclusion and exclusion.
+
+##### 条件查询
+
+~~~python
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoob"]
+mycol = mydb["sites"]
+ 
+myquery = { "name": "RUNOOB" }
+ 
+mydoc = mycol.find(myquery)
+ 
+for x in mydoc:
+  print(x)
+~~~
+
+读取 name 字段中第一个字母 ASCII 值大于 "H" 的数据，大于的修饰符条件为 **{"$gt": "H"}** :
+
+~~~python
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoob"]
+mycol = mydb["sites"]
+ 
+myquery = { "name": { "$gt": "H" } }
+ 
+mydoc = mycol.find(myquery)
+ 
+for x in mydoc:
+  print(x)
+~~~
+
+##### 正则表达式
+
+ name 字段中第一个字母为 "R" 的数据，正则表达式修饰符条件为 **{"$regex": "^R"}** 
+
+~~~~python
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoobdb"]
+mycol = mydb["sites"]
+ 
+myquery = { "name": { "$regex": "^R" } }
+ 
+mydoc = mycol.find(myquery)
+ 
+for x in mydoc:
+  print(x)
+~~~~
+
+##### LIMIT
+
+~~~
+myresult = mycol.find().limit(3)
+~~~
+
+#### 更新
+
+**update_one()** 方法修改文档中的记录。该方法第一个参数为查询的条件，第二个参数为要修改的字段 "$set": 
+
+**update_many()** 更新多条记录
+
+~~~
+...
+myquery = { "alexa": "10000" }
+newvalues = { "$set": { "alexa": "12345" } }
+ 
+mycol.update_one(myquery, newvalues)
+ 
+# 输出修改后的  "sites"  集合
+for x in mycol.find():
+  print(x)
+~~~
+
+
+
+~~~
+myquery = { "name": { "$regex": "^F" } }
+newvalues = { "$set": { "alexa": "123" } }
+ 
+x = mycol.update_many(myquery, newvalues)
+~~~
+
+#### 结果排序 **sort**
+
+**sort()** 方法第一个参数为要排序的字段，第二个字段指定排序规则，**1** 为升序，**-1** 为降序，默认为升序
+
+~~~
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoobdb"]
+mycol = mydb["sites"]
+ 
+mydoc = mycol.find().sort("alexa", -1)
+ 
+for x in mydoc:
+  print(x)
+~~~
+
+#### 删除
+
+**delete_one()** 方法来删除一个文档，该方法第一个参数为查询对象，指定要删除哪些数据
+
+**delete_many()** 方法来删除多个文档，该方法第一个参数为查询对象，指定要删除哪些数据
+
+**delete_many()** 方法如果传入的是一个空的查询对象，则会删除集合中的所有文档
+
+**drop()** 方法来删除一个集合
+
+~~~python
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoob"]
+mycol = mydb["sites"]
+ 
+myquery = { "name": "Taobao" }
+ 
+mycol.delete_one(myquery)
+ 
+# 删除后输出
+for x in mycol.find():
+  print(x)
+~~~
+
+删除多个
+
+~~~~python
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoob"]
+mycol = mydb["sites"]
+ 
+myquery = { "name": {"$regex": "^F"} }
+ 
+x = mycol.delete_many(myquery)
+ 
+print(x.deleted_count, "个文档已删除")
+~~~~
+
+~~~python
+print("*****multi_delete :")
+multi_delete = mycol.delete_many(myquery)
+ 
+print(multi_delete.deleted_count, "个文档已删除")
+~~~
+
+mycol.delete_many({})
+
+~~~python
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoobdb"]
+mycol = mydb["sites"]
+ 
+x = mycol.delete_many({})
+ 
+print(x.deleted_count, "个文档已删除")
+~~~
+
+这个时候还存在 sites 这个集合
+
+~~~
+> show collections
+sites
+~~~
+
+
+
+drop（）
+
+~~~python
+#!/usr/bin/python3
+ 
+import pymongo
+ 
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+mydb = myclient["runoobdb"]
+mycol = mydb["sites"]
+ 
+mycol.drop()
+~~~
+
+sites 的集合已经不存在了
+
+~~~
+> show collections
+> 
 ~~~
 
