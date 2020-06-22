@@ -1545,6 +1545,8 @@ newvalues = { "$set": { "alexa": "123" } }
 x = mycol.update_many(myquery, newvalues)
 ~~~
 
+讲解save 和update 的[博文](https://www.iteye.com/blog/chenzhou123520-1637629)
+
 #### 结果排序 **sort**
 
 **sort()** 方法第一个参数为要排序的字段，第二个字段指定排序规则，**1** 为升序，**-1** 为降序，默认为升序
@@ -1663,3 +1665,6 @@ sites 的集合已经不存在了
 > 
 ~~~
 
+### W3C
+
+https://www.w3cschool.cn/mongodb/
