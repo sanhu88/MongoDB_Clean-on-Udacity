@@ -95,10 +95,13 @@ def process_file(filename, fields):
             # YOUR CODE HERE
             # pprint.pprint(line)
             pprint.pprint(line["synonym"])
-            
+            line_dict ={}
+            line_dict["synonym"] = 'None'
+            data.append(line_dict)
+            pprint.pprint(data)
 
 
-            i += 1
+          
             exit()
             #pass
     

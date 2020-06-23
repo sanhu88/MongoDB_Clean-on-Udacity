@@ -1668,3 +1668,87 @@ sites 的集合已经不存在了
 ### W3C
 
 https://www.w3cschool.cn/mongodb/
+
+## 5 分析数据
+
+### 5-1 聚合框架
+
+内置自带的分析工具 aggregation framework
+
+以推特数据为例：
+
+~~~json
+{
+    "_id" : ObjectId("5dsds55csdf"),
+    "text" : "something interesting ...",
+    "entities" : {
+        "user_mentions" : [
+            {
+            "screen_name" : "Somebody_else",
+            ...
+        	}
+    	],
+        "urls" : [],
+        "hashtags" : []
+    },
+    "user" : {
+        "friends_count" : 544,
+        "screen_name" : "somebody",
+        "followers_count" : 100,
+        ...
+    },
+       
+}
+~~~
+
+
+
+找出发推最多的用户，步骤：
+
+1. 按照发推的用户进行分组
+2. 统计每个用户的发推数量
+3. 找出发推最多用户（按照发推数量倒序排序，找出最上方的用户）
+
+~~~python
+from pymongo import MongoClient
+import pprint
+
+client = MongoClient("mongodb://localhost:27017")
+db = client.twitter
+
+def most_tweets():
+    result = db.tweets.aggregate([
+        {"$group" : {"_id" : "$user.screen_name","count" : {"$sum" : 1}}},
+        {"$sort" : {"count" : -1}}
+    ]
+    )
+    return result
+
+if __name__ = '__mian__':
+    result = most_tweets()
+    pprint.pprint(result)
+~~~
+
+命令行查询，引号不用加很多都可以：
+
+~~~json
+result = db.sites.aggregate([
+    	{$group : {_id : "$name", num_tutorial : {$sum : 1}}},
+    	{$sort : {num_tutorial : -1}}
+    	])
+~~~
+
+~~~json
+{ "_id" : "RUNOOB", "count" : 2 }
+{ "_id" : "Taobao", "count" : 2 }
+{ "_id" : "Facebook", "count" : 2 }
+{ "_id" : "Zhihu", "count" : 1 }
+{ "_id" : "知乎", "count" : 1 }
+{ "_id" : "QQ", "count" : 1 }
+{ "_id" : "Github", "count" : 1 }
+{ "_id" : "Google", "count" : 1 }
+>
+~~~
+
+
+
