@@ -1729,7 +1729,7 @@ if __name__ = '__mian__':
     pprint.pprint(result)
 ~~~
 
-命令行查询，引号不用加很多都可以：
+pymongo 对查询语句，引号必须加，要求严格。命令行查询，引号不用加很多都可以：
 
 ~~~json
 result = db.sites.aggregate([
@@ -1750,5 +1750,116 @@ result = db.sites.aggregate([
 >
 ~~~
 
+管道，pipline（流水线），也就是查询语句。每个阶段接受一部分文件输入，然后生成一系列文件输出。
 
+### 5-2 聚合管道
 
+利用运算符，构成不同的阶段来实现所要的结果
+
+~~~python
+ result = db.tweets.aggregate([
+        {"$group" : {"_id" : "$user.screen_name","count" : {"$sum" : 1}}},
+        {"$sort" : {"count" : -1}}
+    ]
+    )
+~~~
+
+测试，使用组
+
+数据demo：
+
+~~~json
+{
+    "_id" : ObjectId("5304e2e3cc9e684aa98bef97"),
+    "text" : "First week of school is over :P",
+    "in_reply_to_status_id" : null,
+    "retweet_count" : null,
+    "contributors" : null,
+    "created_at" : "Thu Sep 02 18:11:25 +0000 2010",
+    "geo" : null,
+    "source" : "web",
+    "coordinates" : null,
+    "in_reply_to_screen_name" : null,
+    "truncated" : false,
+    "entities" : {
+        "user_mentions" : [ ],
+        "urls" : [ ],
+        "hashtags" : [ ]
+    },
+    "retweeted" : false,
+    "place" : null,
+    "user" : {
+        "friends_count" : 145,
+        "profile_sidebar_fill_color" : "E5507E",
+        "location" : "Ireland :)",
+        "verified" : false,
+        "follow_request_sent" : null,
+        "favourites_count" : 1,
+        "profile_sidebar_border_color" : "CC3366",
+        "profile_image_url" : "http://a1.twimg.com/profile_images/1107778717/phpkHoxzmAM_normal.jpg",
+        "geo_enabled" : false,
+        "created_at" : "Sun May 03 19:51:04 +0000 2009",
+        "description" : "",
+        "time_zone" : null,
+        "url" : null,
+        "screen_name" : "Catherinemull",
+        "notifications" : null,
+        "profile_background_color" : "FF6699",
+        "listed_count" : 77,
+        "lang" : "en",
+        "profile_background_image_url" : "http://a3.twimg.com/profile_background_images/138228501/149174881-8cd806890274b828ed56598091c84e71_4c6fd4d8-full.jpg",
+        "statuses_count" : 2475,
+        "following" : null,
+        "profile_text_color" : "362720",
+        "protected" : false,
+        "show_all_inline_media" : false,
+        "profile_background_tile" : true,
+        "name" : "Catherine Mullane",
+        "contributors_enabled" : false,
+        "profile_link_color" : "B40B43",
+        "followers_count" : 169,
+        "id" : 37486277,
+        "profile_use_background_image" : true,
+        "utc_offset" : null
+    },
+    "favorited" : false,
+    "in_reply_to_user_id" : null,
+    "id" : NumberLong("22819398300")
+}
+~~~
+
+quiz核心部分
+
+~~~python
+def get_db(db_name):
+    from pymongo import MongoClient
+    client = MongoClient('localhost:27017')
+    db = client[db_name]
+    return db
+
+def make_pipeline():
+    # complete the aggregation pipeline
+    pipeline = [{"$group" : {"_id" : "$source","count" : {"$sum" : 1}}},{"$sort" : {"count" : -1}}]
+    return pipeline
+
+def tweet_sources(db, pipeline):
+    return [doc for doc in db.tweets.aggregate(pipeline)]
+
+if __name__ == '__main__':
+    db = get_db('twitter')
+    pipeline = make_pipeline()
+    result = tweet_sources(db, pipeline)
+    import pprint
+    pprint.pprint(result[0])
+    assert result[0] == {u'count': 868, u'_id': u'web'}
+~~~
+
+### 5-3 聚合运算符
+
+1. $project 投影，可以穿透到想要的字段
+2. $macth 匹配筛选
+3. $group
+4. $sort
+5. $skip 比如跳过文件最开始的一部分
+6. $limit 与skip相反，只截取到哪个位置
+7. $unwind

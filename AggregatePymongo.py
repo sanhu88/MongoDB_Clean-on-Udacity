@@ -21,4 +21,7 @@ def most_tweets():
 
 if __name__ == '__main__':
 	result = most_tweets()
-	pprint.pprint(result)
+	# result is <pymongo.command_cursor.CommandCursor object at 0x000002A528ED64F0>
+	for i in result:
+		pprint.pprint(i)
+	
