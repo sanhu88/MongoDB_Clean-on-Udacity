@@ -1900,3 +1900,17 @@ if __name__ = "__main__":
 >
 ~~~
 
+#### $project
+
+使用注意事项：
+
+1. 利用投影来包含源文件中的字段
+2. 每次只能处理一个文件
+3. 利用投影在进行数据构型
+4. 可以插入计算值，比如比例值
+5. 重命名字段
+6. 可以进行大规模的数据构型，创建包含子文件的字段
+
+还有官方其他的操作符，比如一个月的第几天，一周的第几天
+
+官方[地址](http://docs.mongodb.org/manual/reference/operator/aggregation/project/#pipe._S_project)
