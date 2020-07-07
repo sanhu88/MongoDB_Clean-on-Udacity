@@ -1856,10 +1856,47 @@ if __name__ == '__main__':
 
 ### 5-3 聚合运算符
 
-1. $project 投影，可以穿透到想要的字段
+1. $project 投影，可以穿透到想要的字段,对查询结果进行再次运算起别名
 2. $macth 匹配筛选
 3. $group
 4. $sort
 5. $skip 比如跳过文件最开始的一部分
 6. $limit 与skip相反，只截取到哪个位置
 7. $unwind 展开运算符，讲数组分组，比如推文的标签，展开后发给下一个处理阶段
+
+#### $macth
+
+macth 是匹配过滤运算，与find语法类似
+
+~~~python
+import pprint
+from pymongo import MongoClient
+
+client = MogoClient("mongo://localhost:27017")
+db = client.examples
+
+def highest_ratio():
+    result = db.teweets.aggregate([
+        {"$match" : {"user.friends_count" : {"$gt" : 0},
+                     "user.followers_count" : {"$gt" : 0}} 
+        },
+        {"$project" : {"ratio" : {"$divide" : ["user.followers_count","user.friends_count"]},
+                       	"screen_name" : "$user.screen_name"
+                      }
+        },
+        {"$sort" : {"ratio" : -1}},
+        {"$limit" : 1}
+    ])
+    return result
+
+if __name__ = "__main__":
+    result = highest_ratio()
+    pprint.pprint(result)
+~~~
+
+~~~bash
+ db.autos.aggregate([{"$match" : {"shipDate" : "2020-06-19"}}])
+{ "_id" : ObjectId("5ee0e880a0b58fad5b46ea7c"), "shipDate" : "2020-06-19" }
+>
+~~~
+
