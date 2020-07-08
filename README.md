@@ -1200,6 +1200,8 @@ switched to db examples
 
 ### 4-13 正则运算符 regex
 
+[参考链接](https://www.runoob.com/mongodb/mongodb-regular-expression.html)
+
 ~~~
 > db.cities.find({"name" : {"$regex" : "ha"}}).pretty()
 ~~~
@@ -1868,11 +1870,13 @@ if __name__ == '__main__':
 
 macth 是匹配过滤运算，与find语法类似
 
+> 哪个用户的 粉丝/关注 值最大？
+
 ~~~python
 import pprint
 from pymongo import MongoClient
 
-client = MogoClient("mongo://localhost:27017")
+client = MongoClient("mongodb://localhost:27017")
 db = client.examples
 
 def highest_ratio():
@@ -1889,7 +1893,7 @@ def highest_ratio():
     ])
     return result
 
-if __name__ = "__main__":
+if __name__ == "__main__":
     result = highest_ratio()
     pprint.pprint(result)
 ~~~
@@ -1900,7 +1904,7 @@ if __name__ = "__main__":
 >
 ~~~
 
-#### $project
+#### $project 投影运算符
 
 使用注意事项：
 
@@ -1914,3 +1918,36 @@ if __name__ = "__main__":
 还有官方其他的操作符，比如一个月的第几天，一周的第几天
 
 官方[地址](http://docs.mongodb.org/manual/reference/operator/aggregation/project/#pipe._S_project)
+
+#### $unwind 展开运算符
+
+比如可以解开数组进行统计计算，展开成N 个数组里每个元素，和其他字段的副本
+
+> *谁在推特中提到的用户数最多？*（@了超级多的人）
+
+~~~python
+import pprint
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:27017")
+db = client.examples
+
+def user_mentions():
+    result = db.teweets.aggregate([
+        {"$unwind" : "$entities.user_mentions"},
+        {"$group" : {"_id" : "$user.screen_name" , 
+                     "count" : {"$sum" : 1}
+                     }
+        },
+        {"$sort" : {"count" : -1}},
+        {"$limit" : 1}
+        
+    ])
+    return result
+
+if __name__ == "__main__":
+    result = user_mentions()
+    pprint.pprint(result)
+
+~~~
+
