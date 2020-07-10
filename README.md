@@ -1951,3 +1951,45 @@ if __name__ == "__main__":
 
 ~~~
 
+### 组累加运算符
+
+* $sum
+* $first
+* $last
+* $max
+* $min
+* $avg
+* $push
+* $addToSet
+
+> 计算某一标签的推文，被转发的平均次数
+
+~~~python
+
+def hashtag_retweet_avg():
+    result = db.tweets.aggaregate(
+    [
+        {"$unwind" : "$entities.hashtags"},
+        {"$group" : {"_id" : "$entities.hashtags.text",
+                    "retweet_avg" : {"$avg" : "$retweet_count"}
+                    }},
+        {"$sort" : {"retweet_avg" : -1}}
+    ]
+    )
+    return result
+~~~
+
+$push 和 $addToSet 用来处理数组。$addToSet 是一种数组累积函数，会去重的统计。
+
+~~~python
+def unique_hashtag_by_user():
+    result = db.tweets.aggaregate([
+        {"$unwind" : "$entities.hashtags"},
+        {"$group" : {"_id" : "$user.screen_name",
+                     "unique_hashtags" : {"$addToSet" : "$entities.hashtags.text"}
+                    }},
+        {"$sort" : {"_id" : -1}}
+    ])
+~~~
+
+*$push 与 $addToSet 相似。区别在于 $push 会将所有值（而不是唯一值）整合到数组中*
