@@ -1993,3 +1993,29 @@ def unique_hashtag_by_user():
 ~~~
 
 *$push 与 $addToSet 相似。区别在于 $push 会将所有值（而不是唯一值）整合到数组中*
+
+### 多运算符应用
+
+单个阶段，只需要考虑输入和输出。
+
+> 哪个用户@的不重复的人 最多？
+
+~~~python
+def unique_user_metions():
+    result = db.tweets.aggaregate([
+        {"$unwind" : "$entities.user_mentions"},
+        {"$group" : {"_id" : "$user.screen_name" , 
+                     "mset" : {"$addToSet" : "entities.user_mentions.screen_name"}
+                     }
+        },
+        # 以上步骤先清洗
+        {"$unwind" : "$mset"},	#按照提到的人名拆分
+        {"$group" : {"_id" : "$_id" , 	#这个阶段接收进来的是_id
+                     "count" : {"$sum" : 1}	#再按照id再次统计
+                     }
+        },
+        {"sort" : {"count" : -1}},
+        {"$limit" : 10},
+    ])
+~~~
+
