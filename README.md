@@ -1994,11 +1994,11 @@ def unique_hashtag_by_user():
 
 *$push 与 $addToSet 相似。区别在于 $push 会将所有值（而不是唯一值）整合到数组中*
 
-### 多运算符应用
+### 多个阶段，运算符应用
 
-单个阶段，只需要考虑输入和输出。
+单个阶段，只需要考虑输入和输出。多个阶段，可能需要同一种运算符多次出现。	
 
-> 哪个用户@的不重复的人 最多？
+> 哪个用户@的不重复的别人 最多？
 
 ~~~python
 def unique_user_metions():
@@ -2006,9 +2006,9 @@ def unique_user_metions():
         {"$unwind" : "$entities.user_mentions"},
         {"$group" : {"_id" : "$user.screen_name" , 
                      "mset" : {"$addToSet" : "entities.user_mentions.screen_name"}
-                     }
+                     }#根据发推人的网名分组，获取所有唯一提到的别人
         },
-        # 以上步骤先清洗
+        # 以上步骤先清洗，只过得了，发推人和提到人员的分组
         {"$unwind" : "$mset"},	#按照提到的人名拆分
         {"$group" : {"_id" : "$_id" , 	#这个阶段接收进来的是_id
                      "count" : {"$sum" : 1}	#再按照id再次统计
@@ -2019,3 +2019,41 @@ def unique_user_metions():
     ])
 ~~~
 
+### 5-4 索引
+
+数据库程序，包括MongoDB 都是在大文件内保存数据，但磁盘中的数据存储时没有顺序，全表查询会很慢，当数据很大的时候。
+
+二分法（B tree）来搜索查找数据，索引需要设置关键字，索引就是按照一定顺序排列关键字
+
+用 （hashtag，date，user_name）三个字段来做indexes，设定后顺序是固定的，递进分层式查找
+
+写数据比读数据慢的原因之一，是写入数据后会重建索引
+
+索引会占用磁盘空间；更新需要一定时间
+
+#### 使用索引
+
+使用OpenStreeData，大约有7百万个collection 记录
+
+~~~json
+db.nodes.find().pretty()	#查看数据
+db.nodes.find({"tg" : {"$exist" : 1}}).pretty()		#查找包含tag的字段
+~~~
+
+
+
+在没有做索引的情况下，执行：
+
+~~~json
+db.nodes.find({"tg" : {"k" : "name" ,"v" : "Giordanos"}}).pretty()		#查询披萨店
+~~~
+
+大概要几秒钟才能返回。当短时间内大规模查询时，会产生影响。一般单个查询建议不要超过2秒
+
+开启索引：
+
+~~~json
+db.nodes.ensureIndex({"tg" : 1})	#需要一些时间完成索引文件创建
+~~~
+
+再次运行上面的查询，会立即返回结果	
