@@ -2057,3 +2057,34 @@ db.nodes.ensureIndex({"tg" : 1})	#需要一些时间完成索引文件创建
 ~~~
 
 再次运行上面的查询，会立即返回结果	
+
+更多索引相关：
+
+[MongoDB 大学](https://university.mongodb.com/)
+
+[官方介绍index](http://docs.mongodb.org/manual/indexes/)
+
+#### 地理空间索引 geospatial indexes
+
+二维地理信息检索
+
+创建地理信息索引，需要三个已知条件
+
+1. 地点字段信息 location ：[x,y]
+2. 确保索引开启 ensueIndex，并且已经索引上面字段
+3. 使用$near 运算符查询
+
+在python文件中
+
+~~~python
+client.osm.nodes.ensure_index([('loc',pymongo.GEO2D)])	#传入的是元组
+~~~
+
+pymongo 命令
+
+~~~json
+db.node.find({"loc" : {"$near" : [41.94,-89.65]},"tg" {"$exist" : 1}}).pretty()
+~~~
+
+
+
