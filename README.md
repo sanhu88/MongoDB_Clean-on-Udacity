@@ -2021,7 +2021,7 @@ def unique_user_metions():
 
 ### 5-4 索引
 
-数据库程序，包括MongoDB 都是在大文件内保存数据，但磁盘中的数据存储时没有顺序，全表查询会很慢，当数据很大的时候。
+数据库程序，包括MongoDB 都是在大文件内保存数据，但磁盘中的数据存储时没有顺序，全表查询会很慢，尤其当数据很大的时候。
 
 二分法（B tree）来搜索查找数据，索引需要设置关键字，索引就是按照一定顺序排列关键字
 
@@ -2056,6 +2056,18 @@ db.nodes.find({"tg" : {"k" : "name" ,"v" : "Giordanos"}}).pretty()		#查询披�
 db.nodes.ensureIndex({"tg" : 1})	#需要一些时间完成索引文件创建
 ~~~
 
+~~~json
+> db.sites.ensureIndex({"tags" : 1})
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+}
+~~~
+
+
+
 再次运行上面的查询，会立即返回结果	
 
 更多索引相关：
@@ -2083,8 +2095,24 @@ client.osm.nodes.ensure_index([('loc',pymongo.GEO2D)])	#传入的是元组
 pymongo 命令
 
 ~~~json
-db.node.find({"loc" : {"$near" : [41.94,-89.65]},"tg" {"$exist" : 1}}).pretty()
+db.node.find({"loc" : {"$near" : [41.94,-89.65]},"tg" : {"$exist" : 1}}).pretty()
 ~~~
 
+## 6 案例研究 OpenStreeMap
 
+
+
+### OMS xml
+
+由三种不同类型的数据基元（data primitives）组成：
+
+* nodes 节点
+* ways 路径
+* relations 关系
+
+OpenStreetMap 关于 OMS XML的介绍：
+
+https://wiki.openstreetmap.org/wiki/Zh-hans:OSM_XML
+
+### SAX 解析XML
 
