@@ -655,6 +655,7 @@ with open('ONT-AA-ariline.html','w') as f:
           osm_file = open("chicago.osm", "r")
 
           street_type_re = re.compile(r'\S+\.?$', re.IGNORECASE)
+        #\S 非空字符 \. 后面可能会跟着句点 $在字符串的末尾
           street_types = defaultdict(int)
 
           def audit_street_type(street_types, street_name):
@@ -669,7 +670,7 @@ with open('ONT-AA-ariline.html','w') as f:
               keys = sorted(keys, key=lambda s: s.lower())
               for k in keys:
                   v = d[k]
-                  print "%s: %d" % (k, v) 
+                  print ("%s: %d" % (k, v)) 
 
           def is_street_name(elem):
               return (elem.tag == "tag") and (elem.attrib['k'] == "addr:street")
@@ -2115,4 +2116,19 @@ OpenStreetMap 关于 OMS XML的介绍：
 https://wiki.openstreetmap.org/wiki/Zh-hans:OSM_XML
 
 ### SAX 解析XML
+
+练习：统计所有顶级xml标签的名字和对应的个数。类似之前统计街道的不同称呼。
+
+把每个标签组作为一个事件处理
+
+~~~python
+UnicodeDecodeError: 'gbk' codec can't decode byte 0xae in position 2506: illegal multibyte sequence
+
+在open中增加
+encoding='UTF-8'
+
+osm_file = open('./OpenStreetMap/XiPing-map.osm','r',encoding='UTF-8')
+~~~
+
+python 3.8 [正则表达式](https://docs.python.org/zh-cn/3.8/library/re.html)
 
