@@ -2132,3 +2132,9 @@ osm_file = open('./OpenStreetMap/XiPing-map.osm','r',encoding='UTF-8')
 
 python 3.8 [正则表达式](https://docs.python.org/zh-cn/3.8/library/re.html)
 
+### 审查街道名称
+
+* audit 审核
+* develop plan for cleaning 制定清理计划
+* write code to clean 编码
+* 重复以上三步

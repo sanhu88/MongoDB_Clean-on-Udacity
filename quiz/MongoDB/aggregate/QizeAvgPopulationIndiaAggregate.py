@@ -24,7 +24,10 @@ Please note that the dataset you are using here is a smaller version of the twit
 in examples in this lesson. If you attempt some of the same queries that we looked at in the lesson 
 examples, your results will be different.
 
-在上一道练习中，我们查看了城市数据集，并询问印度的哪个地区包含的城市最多。在这道练习中，我们想请你回答另一个关于印度地区的相关问题。印度各个地区的平均人口数量是多少？你需要首先计算每个地区城市的平均人口数量，然后计算地区的平均人口数量。
+在上一道练习中，我们查看了城市数据集，并询问印度的哪个地区包含的城市最多。
+在这道练习中，我们想请你回答另一个关于印度地区的相关问题。
+印度各个地区的平均人口数量是多少？
+你需要首先计算每个地区城市的平均人口数量，然后计算地区的平均人口数量。
 
 提示：如果你想使用所有输入文档中的值汇集到一个群组阶段中，可以使用常量作为“_id”字段的值。例如：
 { "$group" : {"_id" : "India Regional City Population Average", ... }

@@ -25,9 +25,8 @@ def process_map(filename):
     users = set()
     for _, element in ET.iterparse(filename):
         #pass
-        for tag in elem.iter('tag')
-        #user_name = 
-
+        for tag in element.iter('user')
+        #user_name =user
     return users
 
 
